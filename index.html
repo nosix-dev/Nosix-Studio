@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nosix Studio</title>
+<link rel="icon" type="image/png" href="LogoV3.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#13120f;
+  --white:#1a1916;
+  --ink:#ede9e1;
+  --ink2:#c8c3b8;
+  --muted:#6b6760;
+  --gold: #e2b435;
+  --gold-light:#3a2e16;
+  --line:#2a2823;
+  --surface:#111009;
+  --orange:#ff6b2b;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--cream);
+  color:var(--ink);
+  font-family:'DM Sans',sans-serif;
+  font-size:16px;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+body{cursor:none}
+.cursor{
+  width:8px;height:8px;
+  background:var(--orange);
+  border-radius:50%;
+  position:fixed;top:0;left:0;
+  pointer-events:none;z-index:9999;
+  transition:transform 0.15s ease,width 0.2s,height 0.2s,background 0.2s;
+  transform:translate(-50%,-50%);
+}
+.cursor-ring{
+  width:32px;height:32px;
+  border:1px solid var(--orange);
+  border-radius:50%;
+  position:fixed;top:0;left:0;
+  pointer-events:none;z-index:9998;
+  transition:transform 0.08s ease;
+  transform:translate(-50%,-50%);
+  opacity:0.4;
+}
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.6rem 5vw;
+  background:rgba(19,18,15,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--line);
+}
+.logo{
+  font-family:'Playfair Display',serif;
+  font-size:1.3rem;font-weight:500;
+  color:var(--ink);text-decoration:none;letter-spacing:0.02em;
+}
+.logo sup{
+  font-family:'DM Sans',sans-serif;
+  font-size:0.55rem;font-weight:500;
+  color:var(--gold);letter-spacing:2px;text-transform:uppercase;
+  vertical-align:super;margin-left:4px;
+}
+nav ul{list-style:none;display:flex;gap:2rem;align-items:center}
+nav a{
+  color:var(--muted);text-decoration:none;
+  font-size:0.82rem;font-weight:400;
+  letter-spacing:0.08em;text-transform:uppercase;
+  transition:color 0.2s;
+}
+nav a:hover{color:var(--ink)}
+.nav-tool{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  color:var(--muted) !important;
+  border:1px solid var(--line);
+  padding:0.35rem 0.9rem !important;
+  font-size:0.72rem !important;
+  letter-spacing:0.12em !important;
+  transition:color 0.2s,border-color 0.2s,background 0.2s !important;
+}
+.nav-tool:hover{color:var(--gold) !important;border-color:var(--gold) !important;background:var(--gold-light) !important}
+.nav-cta{
+  background:var(--ink) !important;color:var(--cream) !important;
+  padding:0.6rem 1.6rem !important;font-size:0.75rem !important;
+  letter-spacing:0.12em !important;transition:background 0.2s !important;
+}
+.nav-cta:hover{background:var(--gold) !important;color:var(--white) !important}
+.hero{
+  min-height:100vh;
+  display:grid;grid-template-columns:1fr 1fr;
+  align-items:center;padding:0 5vw;padding-top:6rem;
+  gap:4rem;position:relative;overflow:hidden;
+}
+.hero::before{display:none}
+.hero-left{position:relative;z-index:1;padding:4rem 0}
+.hero-eyebrow{display:flex;align-items:center;gap:1rem;margin-bottom:2rem}
+.eyebrow-line{width:40px;height:1px;background:var(--gold)}
+.eyebrow-text{
+  font-size:0.72rem;font-weight:500;
+  letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);
+}
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(3rem,5.5vw,5.5rem);font-weight:500;
+  line-height:1.05;letter-spacing:-0.02em;
+  color:var(--ink);margin-bottom:2rem;
+}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero-desc{
+  font-size:1rem;font-weight:300;color:var(--muted);
+  max-width:400px;line-height:1.8;margin-bottom:3rem;
+}
+.hero-actions{display:flex;align-items:center;gap:2rem}
+.btn-dark{
+  background:var(--ink);color:var(--cream);
+  padding:1rem 2.4rem;font-size:0.78rem;font-weight:500;
+  letter-spacing:0.12em;text-transform:uppercase;
+  text-decoration:none;transition:background 0.25s,transform 0.15s;display:inline-block;
+}
+.btn-dark:hover{background:var(--gold);transform:translateY(-2px)}
+.link-arrow{
+  font-size:0.82rem;color:var(--muted);text-decoration:none;
+  display:flex;align-items:center;gap:0.5rem;transition:color 0.2s,gap 0.2s;
+}
+.link-arrow:hover{color:var(--ink);gap:0.8rem}
+.hero-right{
+  position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:center;
+  padding:4rem 0;overflow:hidden;height:100%;
+}
+.hero-right img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  will-change:transform;
+  transition:transform 0.08s linear;
+}
+.hero-right-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to right, #13120f 0%, transparent 30%);
+  z-index:2;pointer-events:none;
+}
+.section{padding:7rem 5vw}
+.section-alt{background:var(--surface)}
+.tag{display:inline-flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem}
+.tag-line{width:24px;height:1px;background:var(--gold)}
+.tag-text{font-size:0.7rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold)}
+h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2rem,3.5vw,3rem);font-weight:500;
+  line-height:1.15;letter-spacing:-0.01em;color:var(--ink);margin-bottom:1rem;
+}
+.section-sub{font-size:0.95rem;font-weight:300;color:var(--muted);max-width:480px;line-height:1.8;margin-bottom:3.5rem}
+.formules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line)}
+.formule{padding:2.5rem;border-right:1px solid var(--line);position:relative;transition:background 0.25s}
+.formule:last-child{border-right:none}
+.formule:hover{background:var(--white)}
+.formule.best{background:var(--gold);color:#0d0c09}
+.formule.best .form-desc,.formule.best .feat-item,.formule.best .feat-icon{color:rgba(13,12,9,0.65)}
+.formule.best h3,.formule.best .form-price,.formule.best .form-price-label{color:#0d0c09}
+.form-badge{
+  display:inline-block;font-size:0.62rem;font-weight:500;
+  letter-spacing:0.18em;text-transform:uppercase;padding:0.3rem 0.8rem;margin-bottom:1.5rem;
+}
+.formule:not(.best) .form-badge{background:var(--cream);color:var(--gold);border:1px solid var(--gold-light)}
+.formule.best .form-badge{background:rgba(13,12,9,0.2);color:#0d0c09;border:1px solid rgba(13,12,9,0.2)}
+h3{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:500;margin-bottom:0.5rem;color:var(--ink)}
+.form-desc{font-size:0.85rem;color:var(--muted);line-height:1.7;margin-bottom:2rem}
+.form-price{font-family:'Playfair Display',serif;font-size:3rem;font-weight:400;color:var(--ink);line-height:1}
+.form-price-label{font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2rem;margin-top:0.25rem}
+.feats{list-style:none;margin-bottom:2.5rem;display:flex;flex-direction:column;gap:0.7rem}
+.feat-item{display:flex;align-items:flex-start;gap:0.75rem;font-size:0.85rem;color:var(--ink2);line-height:1.5}
+.feat-icon{color:var(--gold);font-size:0.9rem;margin-top:0.1rem;flex-shrink:0}
+.form-btn{
+  display:block;width:100%;padding:0.9rem;
+  text-align:center;text-decoration:none;
+  font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:500;
+  letter-spacing:0.15em;text-transform:uppercase;
+  cursor:pointer;border:none;transition:all 0.2s;
+}
+.formule:not(.best) .form-btn{background:transparent;border:1px solid var(--ink);color:var(--ink)}
+.formule:not(.best) .form-btn:hover{background:var(--ink);color:var(--cream)}
+.formule.best .form-btn{background:#0d0c09;color:var(--gold)}
+.formule.best .form-btn:hover{background:#1a1916}
+.process{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);margin-top:2rem}
+.p-step{padding:2rem 2rem 2rem 1.5rem;border-right:1px solid var(--line)}
+.p-step:last-child{border-right:none}
+.p-num{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--gold);letter-spacing:0.15em;margin-bottom:1rem}
+.p-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:500;color:var(--ink);margin-bottom:0.5rem}
+.p-desc{font-size:0.82rem;color:var(--muted);line-height:1.7}
+.faq-wrap{max-width:680px}
+.faq-row{border-bottom:1px solid var(--line)}
+.faq-q{
+  width:100%;background:none;border:none;color:var(--ink);
+  font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:400;
+  text-align:left;padding:1.4rem 0;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;gap:1rem;transition:color 0.2s;
+}
+.faq-q:hover{color:var(--gold)}
+.faq-ico{
+  width:22px;height:22px;border:1px solid var(--line);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.9rem;color:var(--muted);flex-shrink:0;transition:all 0.2s;
+}
+.faq-ico.open{background:var(--ink);color:var(--cream);border-color:var(--ink);transform:rotate(45deg)}
+.faq-a{font-size:0.85rem;color:var(--muted);line-height:1.8;max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s}
+.faq-a.open{max-height:200px;padding-bottom:1.4rem}
+.media-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:2px;
+  margin-top:2.5rem;
+}
+.media-item{
+  position:relative;overflow:hidden;
+  aspect-ratio:16/9;cursor:none;
+  background:var(--cream);
+}
+.media-item img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform 0.4s ease;display:block;
+}
+.media-item:hover img{transform:scale(1.05)}
+.media-overlay{
+  position:absolute;inset:0;
+  background:rgba(13,12,9,0.55);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity 0.3s;
+}
+.media-item:hover .media-overlay{opacity:1}
+.media-overlay span{
+  font-size:0.72rem;font-weight:500;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold);border:1px solid var(--gold);
+  padding:0.5rem 1.2rem;
+}
+.media-lightbox{
+  display:none;position:fixed;inset:0;z-index:999;
+  background:rgba(13,12,9,0.96);
+  align-items:center;justify-content:center;
+}
+.media-lightbox.active{display:flex}
+.media-lightbox img{
+  max-width:90vw;max-height:85vh;
+  object-fit:contain;
+  border:1px solid var(--line);
+}
+.lb-close{
+  position:absolute;top:1.5rem;right:2rem;
+  background:none;border:1px solid var(--line);color:var(--ink);
+  font-size:1.2rem;width:40px;height:40px;cursor:none;
+  transition:border-color 0.2s,color 0.2s;
+}
+.lb-close:hover{border-color:var(--gold);color:var(--gold)}
+.lb-prev,.lb-next{
+  position:absolute;top:50%;transform:translateY(-50%);
+  background:none;border:1px solid var(--line);color:var(--ink);
+  font-size:2rem;width:48px;height:48px;cursor:none;
+  transition:border-color 0.2s,color 0.2s;
+}
+.lb-prev{left:2rem}
+.lb-next{right:2rem}
+.lb-prev:hover,.lb-next:hover{border-color:var(--gold);color:var(--gold)}
+.lb-counter{
+  position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);
+  font-family:'DM Mono',monospace;font-size:0.72rem;
+  color:var(--muted);letter-spacing:0.15em;
+}
+@media(max-width:900px){
+  .media-grid{grid-template-columns:repeat(2,1fr)}
+  .lb-prev{left:0.5rem}
+  .lb-next{right:0.5rem}
+}
+.hub-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+  border:1px solid var(--line);margin-top:3.5rem;
+}
+.hub-card{
+  padding:3rem;position:relative;overflow:hidden;
+  transition:background 0.3s;
+  text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--line);
+}
+.hub-card:last-child{border-right:none}
+.hub-card:hover{background:var(--white)}
+.hub-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:var(--gold);transform:scaleX(0);transform-origin:left;
+  transition:transform 0.35s ease;
+}
+.hub-card:hover::after{transform:scaleX(1)}
+.hub-icon{
+  font-size:2rem;margin-bottom:1.5rem;
+  display:flex;align-items:center;justify-content:center;
+  width:56px;height:56px;border:1px solid var(--line);
+  color:var(--gold);transition:border-color 0.2s,background 0.2s;
+}
+.hub-card:hover .hub-icon{border-color:var(--gold);background:var(--gold-light)}
+.hub-label{
+  font-size:0.62rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:0.75rem;
+}
+.hub-title{
+  font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:500;
+  color:var(--ink);margin-bottom:0.75rem;line-height:1.15;
+}
+.hub-desc{font-size:0.85rem;color:var(--muted);line-height:1.75;flex:1;margin-bottom:2rem}
+.hub-link{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  font-size:0.75rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--ink);transition:gap 0.2s,color 0.2s;
+  text-decoration:none;
+}
+.hub-link:hover{gap:0.8rem;color:var(--gold)}
+.hub-badge{
+  display:inline-block;font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;
+  padding:0.2rem 0.6rem;background:var(--cream);border:1px solid var(--gold-light);
+  color:var(--gold);margin-bottom:1.5rem;align-self:flex-start;
+}
+footer{background:var(--white);border-top:1px solid var(--line);padding:3rem 5vw}
+.foot-top{display:flex;justify-content:space-between;align-items:start;margin-bottom:3rem}
+.foot-tagline{font-size:0.8rem;color:var(--muted);margin-top:0.4rem;font-weight:300;max-width:240px}
+.foot-cols{display:flex;gap:5rem}
+.foot-col h4{font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:0.5rem}
+.foot-col a{font-size:0.82rem;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.foot-col a:hover{color:var(--ink)}
+.foot-bottom{border-top:1px solid var(--line);padding-top:1.5rem;display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.5rem}
+.foot-copy{font-size:0.75rem;color:var(--muted)}
+.foot-disc{font-size:0.68rem;color:#6b6760}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+@media(max-width:900px){
+  nav{padding:1rem 5vw}
+  nav ul{display:none}
+  .hero{grid-template-columns:1fr;padding:6rem 5vw 3rem}
+  .hero::before{display:none}
+  .hero-right{display:none}
+  .formules-grid{grid-template-columns:1fr}
+  .formule{border-right:none;border-bottom:1px solid var(--line)}
+  .process{grid-template-columns:1fr 1fr}
+  .hub-grid{grid-template-columns:1fr}
+  .hub-card{border-right:none;border-bottom:1px solid var(--line)}
+  .hub-card:last-child{border-bottom:none}
+  .foot-top{flex-direction:column;gap:2rem}
+  .foot-cols{gap:2rem;flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a href="#" class="logo">Nosix<sup>Studio</sup></a>
+  <ul>
+    <li><a href="dlc.html" class="nav-tool">🌍 DLC Hub</a></li>
+    <li><a href="software.html" class="nav-tool">⚙️ Software</a></li>
+    <li><a href="#formules">Formules</a></li>
+    <li><a href="#galerie">Galerie</a></li>
+    <li><a href="#processus">Processus</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="https://discord.gg/sawpqAs7PE" target="_blank" class="nav-cta">Commander</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">Lightbox sur-mesure · ETS2 & ATS</span>
+    </div>
+    <h1>L'identité visuelle<br>de ta <em>VTC.</em></h1>
+    <p class="hero-desc">Des lightbox LED personnalisées, conçues avec soin pour faire rayonner ta compagnie virtuelle sur chaque route d'Euro Truck Simulator 2.</p>
+    <div class="hero-actions">
+      <a href="#formules" class="btn-dark">Voir les formules</a>
+      <a href="#galerie" class="btn-dark">Voir les réalisations</a>
+    </div>
+  </div>
+</div>
+
+<!-- FORMULES -->
+<section class="section" id="formules">
+  <div class="tag"><div class="tag-line"></div><span class="tag-text">Nos formules</span></div>
+  <h2>Choisissez votre formule</h2>
+  <p class="section-sub">Trois offres pensées pour s'adapter à chaque type de projet, du débutant au chef de VTC expérimenté.</p>
+  <div class="formules-grid reveal">
+    <div class="formule">
+      <span class="form-badge">Starter</span>
+      <h3>Essentiel</h3>
+      <p class="form-desc">L'entrée en matière idéale. Ton nom de VTC en lightbox LED, clair et professionnel.</p>
+      <div class="form-price">9,99 €</div>
+      <p class="form-price-label">Fichier numérique</p>
+      <ul class="feats">
+        <li class="feat-item"><span class="feat-icon">✦</span><span>Texte personnalisé (nom VTC)</span></li>
+        <li class="feat-item"><span class="feat-icon">✦</span><span>Couleur de VTC</span></li>
+        <li class="feat-item"><span class="feat-icon">✦</span><span>Intégration mod guidée</span></li>
+      </ul>
+      <a href="https://discord.gg/sawpqAs7PE" target="_blank" class="form-btn">Commander →</a>
+    </div>
+    <div class="formule best">
+      <span class="form-badge">Recommandé</span>
+      <h3>Professionnel</h3>
+      <p class="form-desc">Logo, multi-lignes, effets lumineux avancés. Le choix des VTC qui veulent se distinguer.</p>
+      <div class="form-price">14,99 €</div>
+      <p class="form-price-label">Fichier numérique</p>
+      <ul class="feats">
+        <li class="feat-item"><span class="feat-icon">✦</span><span>texte multi-lignes</span></li>
+        <li class="feat-item"><span class="feat-icon">✦</span><span>Ajout de Logo VTC</span></li>
+        <li class="feat-item"><span class="feat-icon">✦</span><span>Couleur VTC</span></li>
+        <li class="feat-item"><span class="feat-icon">✦</span><span>Intégration mod guidée</span></li>
+      </ul>
+      <a href="https://discord.gg/sawpqAs7PE" target="_blank" class="form-btn">Commander →</a>
+    </div>
+    <div class="formule">
+      <span class="form-badge">Ultimate</span>
+      <h3>Pack VTC</h3>
+      <p class="form-desc">Le pack complet pour équiper toute ta flotte — plusieurs lightbox, animations, intégration guidée.</p>
+      <div class="form-price">24,99 €</div>
+      <p class="form-price-label">Pack complet</p>
+      <ul class="feats">
+        <li class="feat-item"><span class="feat-icon">✦</span><span>Lightbox Scania + Volvo</span></li>
+        <li class="feat-item"><span class="feat-icon">✦</span><span>Stickers Windows</span></li>
+        <li class="feat-item"><span class="feat-icon">✦</span><span>Ajout de Logo VTC + Couleur VTC</span></li>
+        <li class="feat-item"><span class="feat-icon">✦</span><span>texte multi-lignes</span></li>
+        <li class="feat-item"><span class="feat-icon">✦</span><span>Intégration mod guidée</span></li>
+      </ul>
+      <a href="https://discord.gg/sawpqAs7PE" target="_blank" class="form-btn">Commander →</a>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIE -->
+<section class="section section-alt" id="galerie">
+  <div class="tag"><div class="tag-line"></div><span class="tag-text">Nos réalisations</span></div>
+  <h2>Galerie</h2>
+  <p class="section-sub">Quelques créations réalisées pour nos clients — lightbox LED personnalisées sur ETS2 & ATS.</p>
+
+  <div class="media-grid reveal">
+    <div class="media-item">
+      <img src="media1.png" alt="Réalisation 1">
+      <div class="media-overlay"><span>Voir</span></div>
+    </div>
+    <div class="media-item">
+      <img src="media2.png" alt="Réalisation 2">
+      <div class="media-overlay"><span>Voir</span></div>
+    </div>
+    <div class="media-item">
+      <img src="media3.png" alt="Réalisation 3">
+      <div class="media-overlay"><span>Voir</span></div>
+    </div>
+    <div class="media-item">
+      <img src="media4.png" alt="Réalisation 4">
+      <div class="media-overlay"><span>Voir</span></div>
+    </div>
+    <div class="media-item">
+      <img src="media5.png" alt="Réalisation 5">
+      <div class="media-overlay"><span>Voir</span></div>
+    </div>
+    <div class="media-item">
+      <img src="media6.png" alt="Réalisation 6">
+      <div class="media-overlay"><span>Voir</span></div>
+    </div>
+  </div>
+
+  <div class="media-lightbox" id="mediaLightbox" onclick="closeLightbox()">
+    <button class="lb-close" onclick="closeLightbox()">✕</button>
+    <button class="lb-prev" onclick="event.stopPropagation();moveSlide(-1)">‹</button>
+    <button class="lb-next" onclick="event.stopPropagation();moveSlide(1)">›</button>
+    <img src="" alt="" id="lbImg">
+    <div class="lb-counter" id="lbCounter"></div>
+  </div>
+</section>
+
+<!-- OUTILS -->
+<section class="section section-alt" id="outils">
+  <div class="tag"><div class="tag-line"></div><span class="tag-text">Nos outils</span></div>
+  <h2>Téléchargements gratuits</h2>
+  <p class="section-sub">Des outils conçus par Nosix Studio pour enrichir ton expérience sur ETS2 & TruckersMP — entièrement gratuits.</p>
+
+  <div class="hub-grid reveal">
+    <a href="dlc.html" class="hub-card">
+      <span class="hub-badge">Pack gratuit</span>
+      <div class="hub-icon">🌍</div>
+      <div class="hub-label">DLC Hub</div>
+      <div class="hub-title">Pack DLC<br>ETS2 Complet</div>
+      <p class="hub-desc">Télécharge le pack complet de DLC pour Euro Truck Simulator 2 en un seul clic. 28+ contenus inclus, 100% gratuit.</p>
+      <span class="hub-link">Accéder au DLC Hub →</span>
+    </a>
+    <a href="software.html" class="hub-card">
+      <span class="hub-badge">Logiciel gratuit</span>
+      <div class="hub-icon">⚙️</div>
+      <div class="hub-label">Software</div>
+      <div class="hub-title">NosixAutoSend<br>TMP</div>
+      <p class="hub-desc">Automatise l'envoi de messages sur TruckersMP. Planifie tes annonces VTC, gère tes notifications et libère-toi des tâches répétitives — en un seul clic.</p>
+      <span class="hub-link">Télécharger le logiciel →</span>
+    </a>
+  </div>
+</section>
+
+<!-- PROCESSUS -->
+<section class="section" id="processus">
+  <div class="tag"><div class="tag-line"></div><span class="tag-text">Comment ça marche</span></div>
+  <h2>De la commande à l'installation</h2>
+  <p class="section-sub">Un processus simple et transparent pour recevoir ta lightbox rapidement.</p>
+  <div class="process reveal">
+    <div class="p-step">
+      <div class="p-num">01 / 04</div>
+      <div class="p-title">Tu choisis ta formule</div>
+      <p class="p-desc">Sélectionne le pack adapté à tes besoins et clique sur Commander.</p>
+    </div>
+    <div class="p-step">
+      <div class="p-num">02 / 04</div>
+      <div class="p-title">Tu transmets tes éléments</div>
+      <p class="p-desc">Nom VTC, couleurs, logo, textes souhaités — tout via Discord.</p>
+    </div>
+    <div class="p-step">
+      <div class="p-num">03 / 04</div>
+      <div class="p-title">On crée et on valide</div>
+      <p class="p-desc">Tu valides ou demandes des ajustements jusqu'à satisfaction.</p>
+    </div>
+    <div class="p-step">
+      <div class="p-num">04 / 04</div>
+      <div class="p-title">Tu reçois tes fichiers</div>
+      <p class="p-desc">Et tu note ta satisfaction ! sur discord dans le salon #note-préstation</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section section-alt" id="faq">
+  <div class="tag"><div class="tag-line"></div><span class="tag-text">Questions fréquentes</span></div>
+  <h2>FAQ</h2>
+  <div class="faq-wrap reveal" style="margin-top:2rem">
+    <div class="faq-row">
+      <button class="faq-q" onclick="faq(this)">Qu'est-ce qu'une lightbox pour ETS2 ? <span class="faq-ico">+</span></button>
+      <div class="faq-a">Une lightbox ETS2 est une texture personnalisée (PNG/DDS) simulant un panneau LED sur ton camion dans le jeu. Elle remplace ou complète les textures d'origine pour afficher le nom ou logo de ta VTC avec un rendu lumineux réaliste.</div>
+    </div>
+    <div class="faq-row">
+      <button class="faq-q" onclick="faq(this)">Les lightbox fonctionnent-elles sur TruckersMP ? <span class="faq-ico">+</span></button>
+      <div class="faq-a">Oui. Les fichiers de texture étant côté client, la lightbox s'affiche correctement pour toi. Pour que les autres joueurs la voient en multijoueur, il faut un mod partagé ou que chacun dispose du fichier.</div>
+    </div>
+    <div class="faq-row">
+      <button class="faq-q" onclick="faq(this)">Quels fichiers vais-je recevoir ? <span class="faq-ico">+</span></button>
+      <div class="faq-a">Tu reçois un PNG haute résolution et un DDS (format natif ETS2), accompagnés d'un guide d'installation en PDF. Le Pack VTC inclut également des fichiers .scs prêts à l'emploi.</div>
+    </div>
+    <div class="faq-row">
+      <button class="faq-q" onclick="faq(this)">Quel est le délai de livraison ? <span class="faq-ico">+</span></button>
+      <div class="faq-a">En général 24 à 48 h après validation de la commande et réception de tous tes éléments. Les clients Discord bénéficient d'un suivi en temps réel.</div>
+    </div>
+    <div class="faq-row">
+      <button class="faq-q" onclick="faq(this)">Puis-je demander des modifications ? <span class="faq-ico">+</span></button>
+      <div class="faq-a">Oui. Toutes les formules incluent au minimum une révision gratuite. La formule Pro en inclut deux, et le Pack VTC offre des révisions illimitées ainsi que des mises à jour gratuites.</div>
+    </div>
+    <div class="faq-row">
+      <button class="faq-q" onclick="faq(this)">Quels modes de paiement sont acceptés ? <span class="faq-ico">+</span></button>
+      <div class="faq-a">Paiement par PayPal ou virement bancaire. Remboursement intégral garanti si la livraison n'est pas effectuée dans les délais convenus.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-top">
+    <div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--ink);font-weight:500">Nosix<sup style="font-family:'DM Sans',sans-serif;font-size:0.5rem;font-weight:500;color:var(--gold);letter-spacing:2px;text-transform:uppercase;vertical-align:super;margin-left:3px">Studio</sup></div>
+      <p class="foot-tagline">Lightbox LED sur-mesure pour la communauté ETS2 & ATS.</p>
+    </div>
+    <div class="foot-cols">
+      <div class="foot-col">
+        <h4>Formules</h4>
+        <ul>
+          <li><a href="#formules">Essentiel</a></li>
+          <li><a href="#formules">Professionnel</a></li>
+          <li><a href="#formules">Pack VTC</a></li>
+          <li><a href="https://discord.gg/sawpqAs7PE" target="_blank">Sur-mesure</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Outils</h4>
+        <ul>
+          <li><a href="software.html">NosixAutoSendTMP</a></li>
+          <li><a href="dlc.html">DLC Hub ETS2</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Communauté</h4>
+        <ul>
+          <li><a href="https://discord.gg/sawpqAs7PE" target="_blank">Discord</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#">CGV</a></li>
+          <li><a href="#">Mentions légales</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <p class="foot-copy">© 2026 Nosix Studio — Tous droits réservés · <a href="https://discord.com/users/1252736157285093397" target="_blank" style="color:var(--muted);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">@Nosix</a></p>
+    <p class="foot-disc">Non affilié à SCS Software. Euro Truck Simulator 2 est une marque déposée de SCS Software.</p>
+  </div>
+</footer>
+
+<script>
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+let mx=0, my=0, rx=0, ry=0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top  = my + 'px';
+});
+
+function animRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.transform = 'translate(-50%,-50%) scale(1.8)';
+    cursor.style.background = 'var(--ink)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+    cursor.style.background = 'var(--orange)';
+  });
+});
+
+function faq(btn) {
+  const a  = btn.nextElementSibling;
+  const ic = btn.querySelector('.faq-ico');
+  const open = a.classList.contains('open');
+  document.querySelectorAll('.faq-a.open').forEach(x => x.classList.remove('open'));
+  document.querySelectorAll('.faq-ico.open').forEach(x => x.classList.remove('open'));
+  if (!open) { a.classList.add('open'); ic.classList.add('open'); }
+}
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+let currentSlide = 0;
+const mediaItems = document.querySelectorAll('.media-item');
+const lbImg      = document.getElementById('lbImg');
+const lbCounter  = document.getElementById('lbCounter');
+const lightbox   = document.getElementById('mediaLightbox');
+
+mediaItems.forEach((item, i) => {
+  item.addEventListener('click', () => openLightbox(i));
+});
+
+function openLightbox(index) {
+  currentSlide = index;
+  const img = mediaItems[index].querySelector('img');
+  lbImg.src = img.src;
+  lbImg.alt = img.alt;
+  lbCounter.textContent = (index + 1) + ' / ' + mediaItems.length;
+  lightbox.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  lightbox.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function moveSlide(dir) {
+  currentSlide = (currentSlide + dir + mediaItems.length) % mediaItems.length;
+  openLightbox(currentSlide);
+}
+
+document.addEventListener('keydown', e => {
+  if (!lightbox.classList.contains('active')) return;
+  if (e.key === 'ArrowRight') moveSlide(1);
+  if (e.key === 'ArrowLeft')  moveSlide(-1);
+  if (e.key === 'Escape')     closeLightbox();
+});
+</script>
+
+<style>
+.geo{position:fixed;top:0;left:0;pointer-events:none;z-index:0;opacity:0.20;}
+</style>
+<canvas id="geoCanvas" class="geo" style="inset:0;width:100%;height:100%"></canvas>
+<script>
+const gc = document.getElementById('geoCanvas');
+const ctx = gc.getContext('2d');
+gc.width = window.innerWidth;
+gc.height = window.innerHeight;
+window.addEventListener('resize', () => { gc.width = window.innerWidth; gc.height = window.innerHeight; });
+
+const shapes = Array.from({length: 18}, () => ({
+  x: Math.random() * window.innerWidth,
+  y: Math.random() * window.innerHeight,
+  size: 40 + Math.random() * 120,
+  speed: 0.2 + Math.random() * 0.5,
+  angle: Math.random() * Math.PI * 2,
+  rot: 0,
+  rotSpeed: (Math.random() - 0.5) * 0.008,
+  type: Math.floor(Math.random() * 3),
+  color: Math.random() > 0.5 ? '#e2b435' : '#ede9e1'
+}));
+
+function drawHex(x, y, r, rot) {
+  ctx.beginPath();
+  for(let i = 0; i < 6; i++) {
+    const a = rot + i * Math.PI / 3;
+    i === 0 ? ctx.moveTo(x + r * Math.cos(a), y + r * Math.sin(a))
+             : ctx.lineTo(x + r * Math.cos(a), y + r * Math.sin(a));
+  }
+  ctx.closePath();
+}
+
+function animate() {
+  ctx.clearRect(0, 0, gc.width, gc.height);
+  shapes.forEach(s => {
+    s.y -= s.speed;
+    s.rot += s.rotSpeed;
+    if (s.y + s.size < 0) { s.y = gc.height + s.size; s.x = Math.random() * gc.width; }
+    ctx.save();
+    ctx.strokeStyle = s.color;
+    ctx.lineWidth = 1;
+    ctx.translate(s.x, s.y);
+    ctx.rotate(s.rot);
+    if (s.type === 0) {
+      ctx.strokeRect(-s.size/2, -s.size/2, s.size, s.size);
+    } else if (s.type === 1) {
+      ctx.beginPath();
+      ctx.moveTo(0, -s.size/2);
+      ctx.lineTo(s.size/2, s.size/2);
+      ctx.lineTo(-s.size/2, s.size/2);
+      ctx.closePath(); ctx.stroke();
+    } else {
+      drawHex(0, 0, s.size/2, 0); ctx.stroke();
+    }
+    ctx.restore();
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>
